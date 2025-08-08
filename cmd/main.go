@@ -25,7 +25,7 @@ func main() {
 
 	defer reader.Close()
 
-	connStr := "postgres://postgres_user:postgres_password@localhost:5432/wb_test_db?sslmode=disable"
+	connStr := "postgres://postgres_user:postgres_password@postgres:5432/wb_test_db?sslmode=disable"
 
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
