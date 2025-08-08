@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/Jersonmade/test-wb-project/internal/cache"
 	"github.com/Jersonmade/test-wb-project/internal/handler"
 	kafkaconsumer "github.com/Jersonmade/test-wb-project/internal/kafka-consumer"
 	"github.com/gorilla/mux"
@@ -31,19 +32,16 @@ func main() {
 		log.Fatal(err)
 	}
 
-	err = db.Ping()
-	if err != nil {
-		log.Fatal("Ошибка подключения", err)
-	}
-
 	log.Println("успешное подключение к PostgreSQL")
 
 	defer db.Close()
 
 	go kafkaconsumer.StartConsumer(db, reader)
 
+	orderCache := cache.NewOrderCache()
+
 	r := mux.NewRouter()
-	r.HandleFunc("/orders/{orderUID}", handler.GetOrderHandler(db)).Methods("GET")
+	r.HandleFunc("/orders/{orderUID}", handler.GetOrderHandler(db, orderCache)).Methods("GET")
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
 
 	log.Println("HTTP сервер запущен на порту 8080")
