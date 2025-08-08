@@ -3,7 +3,6 @@ services:
   postgres:
     image: postgres:15
     container_name: postgres_container
-    restart: always
     environment:
       - POSTGRES_USER=postgres_user
       - POSTGRES_PASSWORD=postgres_password
