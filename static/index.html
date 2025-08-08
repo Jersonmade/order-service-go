@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Поиск заказа</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background-color: #f9f9f9;
+    }
+    h1 {
+      color: #333;
+    }
+    input, button {
+      padding: 10px;
+      margin-top: 10px;
+      font-size: 16px;
+    }
+    #result {
+      margin-top: 20px;
+      background: #f0f0f0;
+      padding: 20px;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      font-family: Consolas, monospace;
+      max-width: 800px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>Поиск заказа по OrderUID</h1>
+  <label for="OrderUID">Введите OrderUID:</label><br/>
+  <input type="text" id="OrderUID" placeholder="Например: g6515616fxgxghxtest"/>
+  <button onclick="fetchOrder()">Поиск</button>
+
+  <div id="result"></div>
+
+  <script>
+    async function fetchOrder() {
+      const orderUID = document.getElementById("OrderUID").value.trim();
+      const res = document.getElementById("result");
+
+      if (!orderUID) {
+        res.textContent = "Введите OrderUID";
+        return;
+      }
+
+      try {
+        const response = await fetch('http://localhost:8080/orders/' + orderUID);
+
+        if (!response.ok) {
+          res.textContent = `Ошибка - ${response.status}`;
+          return;
+        }
+
+        const data = await response.json();
+        res.textContent = JSON.stringify(data, null, 2);
+      } catch (error) {
+        res.textContent = `Ошибка - ${error.message}`;
+      }
+    }
+  </script>
+</body>
+</html>

@@ -44,9 +44,10 @@ func main() {
 
 	r := mux.NewRouter()
 	r.HandleFunc("/orders/{orderUID}", handler.GetOrderHandler(db)).Methods("GET")
+	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
 
 	log.Println("HTTP сервер запущен на порту 8080")
-	log.Fatal(http.ListenAndServe(":8085", r))
+	log.Fatal(http.ListenAndServe(":8080", r))
 
 	
 }
