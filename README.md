@@ -6,4 +6,4 @@
 
 __HOST__ http://localhost:8080
 
-__HTML__ __страница__  http://localhost:8080/static
+__HTML__ __страница__  http://localhost:8080/static/
