@@ -7,3 +7,5 @@
 __HOST__ http://localhost:8080
 
 __HTML__ __страница__  http://localhost:8080/static/
+
+Пример сообщения, отправляемого в kafka приведен в файле orders.json
