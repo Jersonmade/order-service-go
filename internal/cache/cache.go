@@ -3,7 +3,7 @@ package cache
 import (
 	"sync"
 
-	"github.com/Jersonmade/test-wb-project/internal/model"
+	"github.com/Jersonmade/order-service-go/internal/model"
 )
 
 type OrderCache struct {

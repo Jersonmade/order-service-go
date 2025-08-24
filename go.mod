@@ -1,4 +1,4 @@
-module github.com/Jersonmade/test-wb-project
+module github.com/Jersonmade/order-service-go
 
 go 1.22.1
 

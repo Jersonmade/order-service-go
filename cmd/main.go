@@ -5,9 +5,9 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Jersonmade/test-wb-project/internal/cache"
-	"github.com/Jersonmade/test-wb-project/internal/handler"
-	kafkaconsumer "github.com/Jersonmade/test-wb-project/internal/kafka-consumer"
+	"github.com/Jersonmade/order-service-go/internal/cache"
+	"github.com/Jersonmade/order-service-go/internal/handler"
+	kafkaconsumer "github.com/Jersonmade/order-service-go/internal/kafka-consumer"
 	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
 	"github.com/segmentio/kafka-go"

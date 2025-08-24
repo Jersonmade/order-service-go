@@ -6,8 +6,8 @@ import (
 	"encoding/json"
 	"log"
 
-	"github.com/Jersonmade/test-wb-project/internal/model"
-	"github.com/Jersonmade/test-wb-project/internal/repository"
+	"github.com/Jersonmade/order-service-go/internal/model"
+	"github.com/Jersonmade/order-service-go/internal/repository"
 	"github.com/segmentio/kafka-go"
 )
 

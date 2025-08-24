@@ -6,8 +6,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Jersonmade/test-wb-project/internal/cache"
-	"github.com/Jersonmade/test-wb-project/internal/repository"
+	"github.com/Jersonmade/order-service-go/internal/cache"
+	"github.com/Jersonmade/order-service-go/internal/repository"
 	"github.com/gorilla/mux"
 )
 

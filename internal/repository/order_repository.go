@@ -2,7 +2,7 @@ package repository
 
 import (
 	"database/sql"
-	"github.com/Jersonmade/test-wb-project/internal/model"
+	"github.com/Jersonmade/order-service-go/internal/model"
 )
 
 func SaveOrder(db *sql.DB, order *model.Order) error {
