@@ -15,7 +15,7 @@ import (
 
 func main() {
 	reader := kafka.NewReader(kafka.ReaderConfig{
-		Brokers:   []string{"localhost:9092"},
+		Brokers:   []string{"kafka:9092"},
 		Topic:     "orders",
 		GroupID:   "order-consumers",
 		Partition: 0,
@@ -46,6 +46,4 @@ func main() {
 
 	log.Println("HTTP сервер запущен на порту 8080")
 	log.Fatal(http.ListenAndServe(":8080", r))
-
-	
 }
