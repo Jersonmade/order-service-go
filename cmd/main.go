@@ -9,6 +9,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/Jersonmade/order-service-go/config"
 	"github.com/Jersonmade/order-service-go/internal/cache"
 	"github.com/Jersonmade/order-service-go/internal/handler"
 	kafkaconsumer "github.com/Jersonmade/order-service-go/internal/kafka-consumer"
@@ -18,23 +19,23 @@ import (
 )
 
 func main() {
+	cfg := config.Load()
+
 	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGTERM, syscall.SIGINT)
 	defer cancel()
 
 	reader := kafka.NewReader(kafka.ReaderConfig{
-		Brokers:   []string{"kafka:9092"},
-		Topic:     "orders",
-		GroupID:   "order-consumers",
-		Partition: 0,
-		MinBytes:  1,
-		MaxBytes:  10e6,
+		Brokers:   cfg.Kafka.Brokers,
+		Topic:     cfg.Kafka.Topic,
+		GroupID:   cfg.Kafka.GroupID,
+		Partition: cfg.Kafka.Partition,
+		MinBytes:  cfg.Kafka.MinBytes,
+		MaxBytes:  cfg.Kafka.MaxBytes,
 	})
 
 	defer reader.Close()
 
-	connStr := "postgres://postgres_user:postgres_password@postgres:5432/wb_test_db?sslmode=disable"
-
-	db, err := sql.Open("postgres", connStr)
+	db, err := sql.Open("postgres", cfg.Database.URL)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -52,7 +53,7 @@ func main() {
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
 
 	srv := &http.Server{
-		Addr:    ":8080",
+		Addr:    cfg.Server.Port,
 		Handler: r,
 	}
 

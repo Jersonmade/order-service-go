@@ -18,7 +18,7 @@ RUN apk --no-cache add ca-certificates
 
 COPY --from=builder /app/main .
 COPY --from=builder /app/static ./static
-
+COPY --from=builder /app/config.yaml .
 
 RUN chmod +x ./main
 
