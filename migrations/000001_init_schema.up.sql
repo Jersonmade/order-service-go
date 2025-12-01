@@ -1,4 +1,13 @@
-CREATE USER wb_user WITH PASSWORD 'wb_password';
+DO
+$$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_roles WHERE rolname = 'wb_user'
+    ) THEN
+        CREATE ROLE wb_user LOGIN PASSWORD 'wb_password';
+    END IF;
+END
+$$;
 
 GRANT ALL PRIVILEGES ON DATABASE wb_test_db TO wb_user;
 
