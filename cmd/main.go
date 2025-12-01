@@ -1,9 +1,13 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	"log"
 	"net/http"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/Jersonmade/order-service-go/internal/cache"
 	"github.com/Jersonmade/order-service-go/internal/handler"
@@ -14,6 +18,9 @@ import (
 )
 
 func main() {
+	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGTERM, syscall.SIGINT)
+	defer cancel()
+
 	reader := kafka.NewReader(kafka.ReaderConfig{
 		Brokers:   []string{"kafka:9092"},
 		Topic:     "orders",
@@ -36,7 +43,7 @@ func main() {
 
 	defer db.Close()
 
-	go kafkaconsumer.StartConsumer(db, reader)
+	go kafkaconsumer.StartConsumer(ctx, db, reader)
 
 	orderCache := cache.NewOrderCache()
 
@@ -44,6 +51,24 @@ func main() {
 	r.HandleFunc("/orders/{orderUID}", handler.GetOrderHandler(db, orderCache)).Methods("GET")
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
 
-	log.Println("HTTP сервер запущен на порту 8080")
-	log.Fatal(http.ListenAndServe(":8080", r))
+	srv := &http.Server{
+		Addr:    ":8080",
+		Handler: r,
+	}
+
+	go func() {
+		log.Println("HTTP сервер запущен на порту 8080")
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			log.Fatalf("HTTP сервер упал: %v", err)
+		}
+	}()
+
+	<-ctx.Done()
+
+	shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer shutdownCancel()
+
+	if err := srv.Shutdown(shutdownCtx); err != nil {
+		log.Printf("HTTP graceful shutdown failed: %v", err)
+	}
 }
